@@ -16,7 +16,6 @@ A real, editable **Next.js App Router** website built around the user's dark for
 4. Open **http://localhost:3000**.
 5. View **http://localhost:3000/our-story** for the founders' page.
 
-On Windows, you may alternatively double-click `START_WEBSITE_WINDOWS.bat` after installing Node.js.
 
 ## What works
 
@@ -65,7 +64,7 @@ The generated `out/` folder is a **static website** suitable for Netlify (publis
 
 The design uses **photographic layered 3D-style parallax, 3D-perspective CSS transforms and scroll sequencing**. It is not a true interactive WebGL 3D scanned fruit model. For physical 3D rotations or peel simulations, a separate GLB model/Three.js scene would be needed. We intentionally kept the site lightweight and without a 3D runtime to improve mobile performance.
 
-The visual assets are illustrative creative assets; replace them with real Mr. Kinoow orchard/product/packaging photographs before commercial launch. See `public/images/reference-concept.png` for the supplied look reference.
+The visual assets are illustrative creative assets; replace them with real Mr. Kinoow orchard/product/packaging photographs before commercial launch..
 
 ## Folder map
 
@@ -84,10 +83,8 @@ MrKinoow_NextJS_Cinematic/
 │   └── Icons.jsx
 ├── lib/siteConfig.js          # MAIN EDITABLE BRAND CONFIG
 ├── public/images/             # included image assets
-├── QUICK_PREVIEW.html         # simple offline design preview, not the full React experience
 ├── next.config.mjs            # static export
 ├── package.json
-└── START_WEBSITE_WINDOWS.bat
 ```
 
 ## Troubleshooting
