@@ -3,8 +3,8 @@ import {useEffect, useRef, useState} from 'react';
 import Icon from './Icons';
 
 const scenes = [
-  {number:'01',small:'THE ORIGIN',title:<>Rooted <i>in</i><br/>Nature.</>, text:'Where warmth, good soil and patience bring our favourite citrus to life.',image:'/images/orchard-sunset.webp',alt:'Sunset over citrus orchards in Punjab',className:'orchard',cap:'GROWN WITH THE SEASONS'},
-  {number:'02',small:'THE FRUIT',title:<>Meet the<br/><i>Kinnow.</i></>,text:'A bright burst of flavour. A moment worth slowing down for.',image:'/images/peel-reveal.webp',alt:'Cinematic peeled citrus fruit with glossy sections',className:'peel',cap:'NATURALLY FULL OF LIFE'},
+  {number:'01',small:'THE ORIGIN',title:<>Rooted <i>in</i><br/>Nature.</>, text:'Where warmth, good soil and patience bring our favourite citrus to life.',image:'/images/orchard-sunset-premium.png',alt:'Sunset over citrus orchards in Punjab',className:'orchard',cap:'GROWN WITH THE SEASONS'},
+  {number:'02',small:'THE FRUIT',title:<>Meet the<br/><i>Kinnow.</i></>,text:'A bright burst of flavour. A moment worth slowing down for.',image:'/images/peel-reveal-premium.png',alt:'Cinematic peeled citrus fruit with glossy sections',className:'peel',cap:'NATURALLY FULL OF LIFE'},
   {number:'03',small:'THE SENSATION',title:<>A little<br/><i>Sunshine.</i></>,text:'The colour. The fragrance. That first, unforgettable juicy bite.',image:'/images/citrus-splash.webp',alt:'Juicy kinnow segments in dramatic warm light',className:'splash',cap:'TASTE THE MOMENT'},
   {number:'04',small:'THE PROMISE',title:<>Made to<br/><i>Delight.</i></>,text:'Beautifully presented. Thoughtfully selected. Ready to be shared.',image:'/images/green-oranges.webp',alt:'Fresh oranges presented with dark green leaves',className:'harvest',cap:'THE MR. KINOOW EXPERIENCE'},
 ];

@@ -12,17 +12,22 @@ export function Header({ count = 0, onOpenCart = () => {}, story = false }) {
     cb(); window.addEventListener('scroll', cb, { passive:true });
     return () => window.removeEventListener('scroll', cb);
   }, []);
+  useEffect(() => {
+    const onKeyDown = (event) => { if (event.key === 'Escape') setMobileOpen(false); };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, []);
   return <header className={`site-header ${scrolled?'is-scrolled':''}`}>
     <div className="nav-inner shell">
       <Link href="/" aria-label="Mr. Kinoow home" className="wordmark"><span>Mr. Kinoow</span><sup>®</sup><i className="wordmark-leaf"/></Link>
-      <nav className={`nav-links ${mobileOpen?'mobile-active':''}`} aria-label="Primary navigation">
-        <Link className={!story?'nav-active':''} href="/" onClick={()=>setMobileOpen(false)}>Home</Link>
-        <Link className={story?'nav-active':''} href="/our-story" onClick={()=>setMobileOpen(false)}>Our Story</Link>
+      <nav id="primary-navigation" className={`nav-links ${mobileOpen?'mobile-active':''}`} aria-label="Primary navigation">
+        <Link className={!story?'nav-active':''} aria-current={!story?'page':undefined} href="/" onClick={()=>setMobileOpen(false)}>Home</Link>
+        <Link className={story?'nav-active':''} aria-current={story?'page':undefined} href="/our-story" onClick={()=>setMobileOpen(false)}>Our Story</Link>
         <Link href="/#collection" onClick={()=>setMobileOpen(false)}>Collection</Link>
       </nav>
       <div className="nav-actions">
         {!story && <button type="button" onClick={onOpenCart} className="cart-button" aria-label={`Open shopping bag with ${count} items`}><Icon name="shopping" size={24}/><span className="cart-count">{count}</span></button>}
-        <button className="mobile-menu" type="button" aria-label={mobileOpen?'Close menu':'Open menu'} aria-expanded={mobileOpen} onClick={()=>setMobileOpen(v=>!v)}><Icon name={mobileOpen?'close':'menu'} size={26}/></button>
+        <button className="mobile-menu" type="button" aria-label={mobileOpen?'Close menu':'Open menu'} aria-controls="primary-navigation" aria-expanded={mobileOpen} onClick={()=>setMobileOpen(v=>!v)}><Icon name={mobileOpen?'close':'menu'} size={26}/></button>
       </div>
     </div>
   </header>;
