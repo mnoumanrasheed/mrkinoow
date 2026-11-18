@@ -32,3 +32,4 @@ Desktop.ini
 # Temporary files
 *.tmp
 *.temp
+.seo-artifacts/

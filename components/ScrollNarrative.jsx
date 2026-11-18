@@ -10,7 +10,7 @@ const scenes = [
 ];
 
 export default function ScrollNarrative(){
-  const root=useRef(null), layers=useRef([]), metering=useRef(null), scrolling=useRef(null),frame=useRef(0);
+  const root=useRef(null), layers=useRef([]), metering=useRef(null), scrolling=useRef(null),frame=useRef(0), currentRef=useRef(0);
   const [current,setCurrent]=useState(0);
   useEffect(()=>{
     const mobile=window.matchMedia('(max-width: 760px)');
@@ -18,32 +18,48 @@ export default function ScrollNarrative(){
     const draw=()=>{
       frame.current=0;
       if(!root.current)return;
-      if(mobile.matches||reduce.matches){layers.current.forEach(s=>{if(s){s.style.removeProperty('opacity');s.style.removeProperty('transform');s.style.removeProperty('pointer-events')}});return;}
+      if(reduce.matches){
+        layers.current.forEach(layer=>{
+          if(!layer)return;
+          layer.style.removeProperty('opacity');layer.style.removeProperty('transform');layer.style.removeProperty('pointer-events');
+          layer.style.removeProperty('--chapter-opacity');layer.style.removeProperty('--chapter-transform');layer.style.removeProperty('--chapter-pointer-events');
+          layer.querySelector('.chapter-art')?.style.removeProperty('--chapter-art-transform');
+        });
+        return;
+      }
       const rect=root.current.getBoundingClientRect();
       const range=Math.max(1,rect.height-window.innerHeight);
       const progress=Math.max(0,Math.min(1,-rect.top/range));
       const exact=progress*(scenes.length-1);
       const closest=Math.min(scenes.length-1,Math.max(0,Math.round(exact)));
-      setCurrent(v=>v===closest?v:closest);
+      if(currentRef.current!==closest){currentRef.current=closest;setCurrent(closest);}
       layers.current.forEach((layer,i)=>{
         if(!layer)return;
         const distance=Math.abs(exact-i);
         const visible=Math.max(0,1-distance);
         const eased=visible*visible*(3-2*visible);
-        layer.style.opacity=String(eased);
-        layer.style.pointerEvents=visible>.7?'auto':'none';
         const vertical=(i-exact)*14;
-        layer.style.transform=`translate3d(0,${vertical}vh,0) scale(${.93+.07*eased})`;
+        const translateY=mobile.matches?`${vertical*((window.visualViewport?.height||window.innerHeight)/100)}px`:`${vertical}vh`;
+        const layerTransform=`translate3d(0,${translateY},0) scale(${.93+.07*eased})`;
         const art=layer.querySelector('.chapter-art');
-        if(art)art.style.transform=`translate3d(${(exact-i)*-6}%,0,0) rotateY(${(exact-i)*-9}deg) scale(${1.10+.1*(1-eased)})`;
+        const artTransform=`translate3d(${(exact-i)*-6}%,0,0) rotateY(${(exact-i)*-9}deg) scale(${1.10+.1*(1-eased)})`;
+        if(mobile.matches){
+          layer.style.removeProperty('opacity');layer.style.removeProperty('transform');layer.style.removeProperty('pointer-events');
+          layer.style.setProperty('--chapter-opacity',String(eased));layer.style.setProperty('--chapter-transform',layerTransform);layer.style.setProperty('--chapter-pointer-events',visible>.7?'auto':'none');
+          if(art)art.style.setProperty('--chapter-art-transform',artTransform);
+        }else{
+          layer.style.removeProperty('--chapter-opacity');layer.style.removeProperty('--chapter-transform');layer.style.removeProperty('--chapter-pointer-events');
+          layer.style.opacity=String(eased);layer.style.pointerEvents=visible>.7?'auto':'none';layer.style.transform=layerTransform;
+          if(art){art.style.removeProperty('--chapter-art-transform');art.style.transform=artTransform;}
+        }
       });
       if(metering.current)metering.current.style.transform=`scaleX(${Math.max(.03,progress)})`;
       if(scrolling.current)scrolling.current.textContent=`0${closest+1} / 0${scenes.length}`;
     };
     const onScroll=()=>{if(!frame.current)frame.current=requestAnimationFrame(draw)};
-    draw(); window.addEventListener('scroll',onScroll,{passive:true});window.addEventListener('resize',onScroll);
+    draw(); window.addEventListener('scroll',onScroll,{passive:true});window.addEventListener('resize',onScroll);window.visualViewport?.addEventListener('resize',onScroll);
     mobile.addEventListener?.('change',onScroll);reduce.addEventListener?.('change',onScroll);
-    return()=>{window.removeEventListener('scroll',onScroll);window.removeEventListener('resize',onScroll);mobile.removeEventListener?.('change',onScroll);reduce.removeEventListener?.('change',onScroll);if(frame.current)cancelAnimationFrame(frame.current)};
+    return()=>{window.removeEventListener('scroll',onScroll);window.removeEventListener('resize',onScroll);window.visualViewport?.removeEventListener('resize',onScroll);mobile.removeEventListener?.('change',onScroll);reduce.removeEventListener?.('change',onScroll);if(frame.current)cancelAnimationFrame(frame.current)};
   },[]);
   return <section className="narrative" ref={root} aria-label="The Mr. Kinoow experience">
     <div className="narrative-sticky">

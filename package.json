@@ -7,7 +7,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "node scripts/check-assets.mjs"
+    "lint": "node scripts/check-assets.mjs",
+    "check:seo": "node scripts/check-seo.mjs",
+    "check:browser": "node scripts/check-browser.mjs"
   },
   "dependencies": {
     "next": "15.3.8",

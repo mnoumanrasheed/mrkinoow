@@ -1,0 +1,42 @@
+.page { padding-top: 130px; padding-bottom: 80px; }
+.page h1 { font-size: clamp(44px, 6vw, 88px); line-height: 1.06; margin: 26px 0; max-width: 1000px; letter-spacing: -.045em; text-wrap: balance; }
+.page h2 { font-size: clamp(28px, 3vw, 42px); line-height: 1.18; letter-spacing: -.035em; margin-bottom: 20px; }
+.page h3 { font-family: var(--font-serif); font-size: 28px; font-weight: 400; line-height: 1.2; margin: 14px 0; }
+.page p, .page li { color: var(--cream); font-size: 15px; line-height: 1.85; }
+.page a:focus-visible { outline-offset: 4px; }
+.breadcrumbs ol { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 10px 18px; margin: 0 0 40px; }
+.breadcrumbs li { font-size: 12px; }
+.breadcrumbs li + li::before { content: '/'; color: var(--gold); margin-right: 18px; }
+.breadcrumbs a, .inlineLink, .sources a { text-decoration: underline; text-underline-offset: 5px; text-decoration-color: var(--gold); }
+.intro { padding-bottom: 48px; border-bottom: 1px solid var(--line); }
+.intro p { max-width: 750px; font-size: 17px; margin-bottom: 0; }
+.editorial { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: clamp(32px, 6vw, 96px); padding-block: 64px; }
+.sections section + section { margin-top: 50px; }
+.sections p { max-width: 70ch; margin-bottom: 0; }
+.aside { min-width: 0; }
+.card { padding: 28px; border: 1px solid var(--line); border-radius: 15px; background: var(--bg2); }
+.card + .card { margin-top: 24px; }
+.card img { width: 100%; height: auto; aspect-ratio: 700 / 530; object-fit: contain; margin: 0 auto 20px; }
+.card p { font-size: 13px; }
+.inlineLink { color: var(--gold); font-size: 14px; }
+.sources { padding-block: 30px; border-block: 1px solid var(--line); }
+.sources ul { padding-left: 20px; }
+.sources p { font-size: 12px; color: var(--muted); }
+.related { padding-top: 50px; }
+.related > div { display: flex; flex-wrap: wrap; gap: 20px 32px; }
+.related a { color: var(--gold); font-size: 14px; padding: 10px 0; }
+.product { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(28px, 5vw, 80px); align-items: start; }
+.product figure { margin: 0; padding: clamp(20px, 3vw, 40px); border: 1px solid var(--line); border-radius: 15px; background: var(--bg2); }
+.product figure img { width: 100%; height: auto; aspect-ratio: 700 / 530; object-fit: contain; }
+.product figcaption { font-size: 12px; color: var(--muted); line-height: 1.7; }
+.product h1 { font-size: clamp(38px, 4.8vw, 66px); margin-top: 18px; }
+.product dl { border-block: 1px solid var(--line); margin-block: 26px; padding-block: 12px; }
+.product dl > div { display: grid; grid-template-columns: 1fr 1.6fr; gap: 18px; padding-block: 12px; font-size: 14px; line-height: 1.7; }
+.product dt { color: var(--muted); }
+.product dd { margin: 0; }
+.product .notice { font-size: 13px; }
+.product .action { max-width: 100%; white-space: normal; text-align: center; padding-block: 12px; }
+.details { margin-top: 65px; max-width: 850px; }
+.details h2 { margin-top: 38px; }
+@media(max-width:900px) { .editorial { gap: 32px; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); } .card { padding: 20px; } .product { gap: 28px; } }
+@media(max-width:760px) { .page { padding-top: 100px; padding-bottom: 60px; } .breadcrumbs ol { margin-bottom: 30px; } .intro { padding-bottom: 32px; } .editorial, .product { grid-template-columns: minmax(0, 1fr); } .editorial { padding-block: 40px; gap: 45px; } .product figure { max-width: 520px; } .product h1 { font-size: clamp(38px, 9vw, 60px); } .related > div { display: grid; gap: 8px; } }

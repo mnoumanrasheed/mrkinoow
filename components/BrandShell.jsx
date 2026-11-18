@@ -4,7 +4,7 @@ import Link from 'next/link';
 import Icon from './Icons';
 import { siteConfig } from '@/lib/siteConfig';
 
-export function Header({ count = 0, onOpenCart = () => {}, story = false }) {
+export function Header({ count = 0, onOpenCart = () => {}, story = false, catalog = false }) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   useEffect(() => {
@@ -21,12 +21,12 @@ export function Header({ count = 0, onOpenCart = () => {}, story = false }) {
     <div className="nav-inner shell">
       <Link href="/" aria-label="Mr. Kinoow home" className="wordmark"><span>Mr. Kinoow</span><sup>®</sup><i className="wordmark-leaf"/></Link>
       <nav id="primary-navigation" className={`nav-links ${mobileOpen?'mobile-active':''}`} aria-label="Primary navigation">
-        <Link className={!story?'nav-active':''} aria-current={!story?'page':undefined} href="/" onClick={()=>setMobileOpen(false)}>Home</Link>
+        <Link className={!story&&!catalog?'nav-active':''} aria-current={!story&&!catalog?'page':undefined} href="/" onClick={()=>setMobileOpen(false)}>Home</Link>
         <Link className={story?'nav-active':''} aria-current={story?'page':undefined} href="/our-story" onClick={()=>setMobileOpen(false)}>Our Story</Link>
-        <Link href="/#collection" onClick={()=>setMobileOpen(false)}>Collection</Link>
+        <Link href="/oranges" onClick={()=>setMobileOpen(false)}>Collection</Link>
       </nav>
       <div className="nav-actions">
-        {!story && <button type="button" onClick={onOpenCart} className="cart-button" aria-label={`Open shopping bag with ${count} items`}><Icon name="shopping" size={24}/><span className="cart-count">{count}</span></button>}
+        {!story && !catalog && <button type="button" onClick={onOpenCart} className="cart-button" aria-label={`Open shopping bag with ${count} items`}><Icon name="shopping" size={24}/><span className="cart-count">{count}</span></button>}
         <button className="mobile-menu" type="button" aria-label={mobileOpen?'Close menu':'Open menu'} aria-controls="primary-navigation" aria-expanded={mobileOpen} onClick={()=>setMobileOpen(v=>!v)}><Icon name={mobileOpen?'close':'menu'} size={26}/></button>
       </div>
     </div>
@@ -37,6 +37,6 @@ export function Footer() {
   const year = new Date().getFullYear();
   return <footer className="footer"><div className="shell footer-top">
     <div><Link href="/" className="footer-brand">Mr. Kinoow<sup>®</sup></Link><p>Good things grow naturally.</p></div>
-    <div className="footer-links"><Link href="/">Home</Link><Link href="/our-story">Our Story</Link><Link href="/#collection">Collection</Link>{siteConfig.instagram && <a href={siteConfig.instagram} target="_blank" rel="noopener noreferrer">Instagram</a>}{siteConfig.facebook && <a href={siteConfig.facebook} target="_blank" rel="noopener noreferrer">Facebook</a>}</div>
+    <div className="footer-links"><Link href="/">Home</Link><Link href="/our-story">Our Story</Link><Link href="/oranges">Collection</Link>{siteConfig.instagram && <a href={siteConfig.instagram} target="_blank" rel="noopener noreferrer">Instagram</a>}{siteConfig.facebook && <a href={siteConfig.facebook} target="_blank" rel="noopener noreferrer">Facebook</a>}</div>
   </div><div className="shell footer-bottom"><span>© {year} Mr. Kinoow. A little sunshine, every day.</span><span>Made with love, inspired by nature.</span></div></footer>;
 }
