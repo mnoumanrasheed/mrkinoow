@@ -3,7 +3,7 @@ import JsonLd from '@/components/JsonLd';
 import { siteConfig } from '@/lib/siteConfig';
 import { absoluteUrl, pageMetadata, siteUrl } from '@/lib/seo.mjs';
 
-export const metadata = pageMetadata({ title: 'Fresh Oranges & Premium Kinnow Pakistan', description: 'Explore fresh oranges, premium kinnow and Malta from Mr. Kinoow. Compare 10 kg citrus boxes and prepare an order enquiry in Pakistan.', path: '/' });
+export const metadata = pageMetadata({ title: 'Royal & Golden Kinnow Collections', description: 'Discover Mr. Kinoow’s two 10 kg kinnow collections from our own farm, thoughtfully packed with free delivery across Pakistan.', path: '/' });
 
 export default function HomePage() {
   const graph = siteUrl ? {

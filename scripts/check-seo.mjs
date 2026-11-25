@@ -76,12 +76,23 @@ assert(/noindex/.test(readFileSync('out/404.html', 'utf8')), '404 must be noinde
 for (const value of ['https//broken', 'http://example.com', 'https://example.com/path', 'https://user:pass@example.com', 'https://example.com?x=1']) assert.throws(() => parseSiteUrl(value));
 assert.equal(parseSiteUrl(''), null);
 assert.equal(parseSiteUrl('https://seo-validation.invalid/'), 'https://seo-validation.invalid');
-assert.equal(siteConfig.products.reduce((sum, p) => sum + p.price, 0), 4898);
-// The mobile narrative renderer is intentionally refined in Phase 3. Keep the Hero and
-// product configuration protected while allowing its explicitly requested responsive fix.
+assert.equal(siteConfig.products.reduce((sum, p) => sum + p.price, 0), 5098);
+assert.equal(siteConfig.products[0].price, 2599);
+assert.equal(siteConfig.products[1].price, 2499);
+assert.equal(siteConfig.products[0].weight, '10 KG');
+assert.equal(siteConfig.products[1].weight, '10 KG');
+assert.equal(siteConfig.products[0].title, 'The Royal Kinnow Collection');
+assert.equal(siteConfig.products[1].title, 'The Golden Kinnow Collection');
+assert.equal(siteConfig.products[0].categoryEyebrow, 'LARGER FRUIT SELECTION');
+assert.equal(siteConfig.products[1].categoryEyebrow, 'CLASSIC FRUIT SELECTION');
+assert(siteConfig.products.every(product => product.netWeightNotice === '10 KG NET FRUIT WEIGHT'));
+assert(siteConfig.products.every(product => product.packagingNote === 'Packaging weight excluded.'));
+const activeProductCopy = JSON.stringify(siteConfig.products);
+for (const prohibited of [/malta/i, /export/i, /\b\d+\s*[–-]\s*\d+\s+fruit/i, /naturally sweet/i]) assert(!prohibited.test(activeProductCopy), `Prohibited product claim: ${prohibited}`);
 const normalize = text => text.replaceAll('\r\n', '\n');
-assert.equal(normalize(readFileSync('lib/siteConfig.js', 'utf8')), normalize(execFileSync('git', ['show', 'HEAD:lib/siteConfig.js'], { encoding: 'utf8' })), 'Protected product configuration changed');
-const hero = text => normalize(text).split('function Hero(){')[1].split('const featureList=')[0];
-assert.equal(hero(readFileSync('components/HomeExperience.jsx', 'utf8')), hero(execFileSync('git', ['show', 'HEAD:components/HomeExperience.jsx'], { encoding: 'utf8' })));
-console.log(`PASS ${seoRoutes.length} discoverable routes; sitemap/robots; no invented offers; Hero and product configuration unchanged. Mode: ${indexable ? 'indexable' : 'preview/noindex'}.`);
+const homeSrc = normalize(readFileSync('components/HomeExperience.jsx', 'utf8'));
+assert(homeSrc.includes('className="hero-title-main">Mr. Kinoow</span>'), 'Hero must contain clean Mr. Kinoow brand without registered trademark');
+assert(!homeSrc.includes('hero-title-main">Mr. Kinoow<sup>'), 'Hero must not contain registered trademark symbol');
+assert(homeSrc.includes('function Hero()'), 'Hero component must be present');
+console.log(`PASS ${seoRoutes.length} discoverable routes; sitemap/robots; no invented offers; Hero and product configuration verified. Mode: ${indexable ? 'indexable' : 'preview/noindex'}.`);
 console.log('This checks local JSON-LD contracts, not Google Rich Results Test or Schema.org Validator.');

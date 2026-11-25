@@ -1,5 +1,5 @@
 'use client';
-import {useEffect, useRef, useState} from 'react';
+import {useEffect, useRef, useState, useCallback} from 'react';
 import Icon from './Icons';
 
 const scenes = [
@@ -12,6 +12,23 @@ const scenes = [
 export default function ScrollNarrative(){
   const root=useRef(null), layers=useRef([]), metering=useRef(null), scrolling=useRef(null),frame=useRef(0), currentRef=useRef(0);
   const [current,setCurrent]=useState(0);
+
+  const goToChapter = useCallback((targetIndex) => {
+    if (!root.current) return;
+    if (targetIndex >= scenes.length) {
+      const col = document.getElementById('collection');
+      if (col) {
+        col.scrollIntoView({ behavior: 'smooth' });
+      }
+      return;
+    }
+    const rect = root.current.getBoundingClientRect();
+    const range = Math.max(1, root.current.offsetHeight - window.innerHeight);
+    const targetProgress = Math.max(0, Math.min(1, targetIndex / (scenes.length - 1)));
+    const targetTop = window.scrollY + rect.top + (range * targetProgress);
+    window.scrollTo({ top: targetTop, behavior: 'smooth' });
+  }, []);
+
   useEffect(()=>{
     const mobile=window.matchMedia('(max-width: 760px)');
     const reduce=window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -43,13 +60,18 @@ export default function ScrollNarrative(){
         const layerTransform=`translate3d(0,${translateY},0) scale(${.93+.07*eased})`;
         const art=layer.querySelector('.chapter-art');
         const artTransform=`translate3d(${(exact-i)*-6}%,0,0) rotateY(${(exact-i)*-9}deg) scale(${1.10+.1*(1-eased)})`;
+        const isInteractive = (i === closest) || (visible > 0.4);
         if(mobile.matches){
           layer.style.removeProperty('opacity');layer.style.removeProperty('transform');layer.style.removeProperty('pointer-events');
-          layer.style.setProperty('--chapter-opacity',String(eased));layer.style.setProperty('--chapter-transform',layerTransform);layer.style.setProperty('--chapter-pointer-events',visible>.7?'auto':'none');
+          layer.style.setProperty('--chapter-opacity',String(eased));
+          layer.style.setProperty('--chapter-transform',layerTransform);
+          layer.style.setProperty('--chapter-pointer-events',isInteractive?'auto':'none');
           if(art)art.style.setProperty('--chapter-art-transform',artTransform);
         }else{
           layer.style.removeProperty('--chapter-opacity');layer.style.removeProperty('--chapter-transform');layer.style.removeProperty('--chapter-pointer-events');
-          layer.style.opacity=String(eased);layer.style.pointerEvents=visible>.7?'auto':'none';layer.style.transform=layerTransform;
+          layer.style.opacity=String(eased);
+          layer.style.pointerEvents=isInteractive?'auto':'none';
+          layer.style.transform=layerTransform;
           if(art){art.style.removeProperty('--chapter-art-transform');art.style.transform=artTransform;}
         }
       });
@@ -59,18 +81,98 @@ export default function ScrollNarrative(){
     const onScroll=()=>{if(!frame.current)frame.current=requestAnimationFrame(draw)};
     draw(); window.addEventListener('scroll',onScroll,{passive:true});window.addEventListener('resize',onScroll);window.visualViewport?.addEventListener('resize',onScroll);
     mobile.addEventListener?.('change',onScroll);reduce.addEventListener?.('change',onScroll);
-    return()=>{window.removeEventListener('scroll',onScroll);window.removeEventListener('resize',onScroll);window.visualViewport?.removeEventListener('resize',onScroll);mobile.removeEventListener?.('change',onScroll);reduce.removeEventListener?.('change',onScroll);if(frame.current)cancelAnimationFrame(frame.current)};
-  },[]);
+
+    const onKeyDown=(e)=>{
+      if(!root.current)return;
+      const rect=root.current.getBoundingClientRect();
+      if(rect.top<=100 && rect.bottom>=window.innerHeight-100){
+        if(e.key==='ArrowRight'||e.key==='ArrowDown'){
+          if(currentRef.current<scenes.length-1){
+            e.preventDefault();
+            goToChapter(currentRef.current+1);
+          }
+        }else if(e.key==='ArrowLeft'||e.key==='ArrowUp'){
+          if(currentRef.current>0){
+            e.preventDefault();
+            goToChapter(currentRef.current-1);
+          }
+        }
+      }
+    };
+    window.addEventListener('keydown',onKeyDown);
+
+    return()=>{
+      window.removeEventListener('scroll',onScroll);
+      window.removeEventListener('resize',onScroll);
+      window.visualViewport?.removeEventListener('resize',onScroll);
+      window.removeEventListener('keydown',onKeyDown);
+      mobile.removeEventListener?.('change',onScroll);
+      reduce.removeEventListener?.('change',onScroll);
+      if(frame.current)cancelAnimationFrame(frame.current);
+    };
+  },[goToChapter]);
+
   return <section className="narrative" ref={root} aria-label="The Mr. Kinoow experience">
     <div className="narrative-sticky">
-      <div className="chapter-guide" aria-hidden="true"><span>THE JOURNEY</span><div className="guide-track"><i ref={metering}/></div><span ref={scrolling}>01 / 04</span></div>
+      <div 
+        className="chapter-guide" 
+        onClick={()=>goToChapter((current + 1) % scenes.length)}
+        role="button"
+        tabIndex={0}
+        aria-label="Advance to next chapter"
+        onKeyDown={(e)=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();goToChapter((current + 1) % scenes.length);}}}
+      >
+        <span>THE JOURNEY</span>
+        <div className="guide-track"><i ref={metering}/></div>
+        <span ref={scrolling}>01 / 04</span>
+      </div>
       {scenes.map((scene,i)=><article className={`chapter chapter-${scene.className}`} key={scene.number} ref={el=>layers.current[i]=el} style={{opacity:i===0?1:0,pointerEvents:i===0?'auto':'none'}}>
         <div className="chapter-bg" style={{backgroundImage:`linear-gradient(90deg,rgba(5,14,10,.94) 0%,rgba(5,14,10,.30) 64%,rgba(5,14,10,.2) 100%),url('${scene.image}')`}}/>
         <div className="chapter-art-wrap" aria-hidden="true"><img className="chapter-art" src={scene.image} alt="" /></div>
-        <div className="shell chapter-copy"><div className="eyebrow"><span className="small-index">{scene.number} / 04</span>{scene.small}</div><h2>{scene.title}</h2><div className="line-gold"/><p>{scene.text}</p><a href="#collection" className="circle-link" aria-label="Discover the collection"><Icon name="arrow" size={25}/></a></div>
+        <div className="shell chapter-copy">
+          <div className="eyebrow"><span className="small-index">{scene.number} / 04</span>{scene.small}</div>
+          <h2>{scene.title}</h2>
+          <div className="line-gold"/>
+          <p>{scene.text}</p>
+          {i < scenes.length - 1 ? (
+            <button 
+              type="button" 
+              className="circle-link" 
+              onClick={()=>goToChapter(i+1)} 
+              aria-label={`Advance to chapter ${scenes[i+1].number}: ${scenes[i+1].small}`}
+              title={`Next: ${scenes[i+1].small}`}
+            >
+              <Icon name="arrow" size={25}/>
+            </button>
+          ) : (
+            <a 
+              href="#collection" 
+              className="circle-link" 
+              onClick={(e)=>{
+                e.preventDefault();
+                goToChapter(scenes.length);
+              }}
+              aria-label="Discover the collection"
+              title="Discover the collection"
+            >
+              <Icon name="arrow" size={25}/>
+            </a>
+          )}
+        </div>
         <div className="chapter-caption">{scene.cap}</div>
       </article>)}
-      <div className="scene-indicator" aria-hidden="true">{scenes.map((s,i)=><span key={s.number} className={current===i?'active':''}/>)}</div>
+      <div className="scene-indicator" aria-label="Chapter navigation">
+        {scenes.map((s,i)=>(
+          <button 
+            key={s.number} 
+            type="button"
+            className={`scene-dot ${current===i?'active':''}`}
+            onClick={()=>goToChapter(i)}
+            aria-label={`Go to chapter ${s.number}: ${s.small}`}
+            title={`Chapter ${s.number}: ${s.small}`}
+          />
+        ))}
+      </div>
     </div>
   </section>;
 }

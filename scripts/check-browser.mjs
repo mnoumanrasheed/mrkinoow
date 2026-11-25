@@ -29,9 +29,17 @@ let ws;
 const report = { viewports: [], runtimeErrors: [], failedRequests: [], metrics: [], checks: [], screenshots: [] };
 try {
   const portFile = resolve(profile, 'DevToolsActivePort');
-  for (let n = 0; !existsSync(portFile) && n < 100; n++) await delay(100);
-  assert(existsSync(portFile), 'Chrome remote debugging did not start.');
-  const port = readFileSync(portFile, 'utf8').split('\n')[0];
+  let port = '';
+  for (let n = 0; n < 100; n++) {
+    try {
+      if (existsSync(portFile)) {
+        const content = readFileSync(portFile, 'utf8');
+        if (content.trim()) { port = content.split('\n')[0].trim(); break; }
+      }
+    } catch {}
+    await delay(100);
+  }
+  assert(port, 'Chrome remote debugging did not start.');
   const tabs = await (await fetch(`http://127.0.0.1:${port}/json/list`)).json();
   ws = new WebSocket(tabs.find(tab => tab.type === 'page').webSocketDebuggerUrl);
   await new Promise((resolve, reject) => { ws.onopen = resolve; ws.onerror = reject; });
@@ -56,7 +64,7 @@ try {
       report.viewports.push({ route, ...state });
       assert.equal(state.brokenImages.length, 0, `${route}: broken images`);
       if (route !== '/' && route !== '/our-story') assert.equal(state.clipped.length, 0, `${route} ${width}: overflow ${JSON.stringify(state.clipped)}`);
-      if ((route === '/oranges' || route === '/products/malta-10kg') && [390,1440].includes(width)) {
+      if ((route === '/oranges' || route === '/products/orchard-select-10kg') && [390,1440].includes(width)) {
         const file = `${route.replaceAll('/', '_')}-${width}.png`;
         const screenshot = await send('Page.captureScreenshot', { format: 'png' }); writeFileSync(resolve(artifacts, file), Buffer.from(screenshot.data, 'base64')); report.screenshots.push(file);
       }
@@ -67,15 +75,17 @@ try {
   await evaluate('document.querySelector(".product-add").click()'); await delay(200);
   assert.equal(await evaluate('document.querySelectorAll(".cart-item").length'), 1);
   await evaluate('document.querySelector(".stepper button:last-child").click()'); await delay(100);
-  assert((await evaluate('document.querySelector(".total-row").textContent')).includes('4,998'));
+  assert((await evaluate('document.querySelector(".total-row").textContent')).includes('5,198'));
   await send('Input.dispatchKeyEvent', { type: 'keyDown', key: 'Escape', code: 'Escape', windowsVirtualKeyCode: 27 }); await delay(100);
   assert.equal(await evaluate('document.querySelector(".drawer-open") === null'), true);
   await navigate('/');
   assert.equal(await evaluate('document.querySelector(".cart-count").textContent'), '2');
   await evaluate('document.querySelectorAll(".product-add")[1].click()'); await delay(100);
-  assert((await evaluate('document.querySelector(".total-row").textContent')).includes('7,397'));
+  assert((await evaluate('document.querySelector(".total-row").textContent')).includes('7,697'));
   await evaluate('Object.defineProperty(navigator,"clipboard",{configurable:true,value:{writeText:async text=>{window.__copiedOrder=text}}});document.querySelector(".checkout-btn").click()'); await delay(100);
-  assert((await evaluate('window.__copiedOrder')).includes('7,397'));
+  assert((await evaluate('window.__copiedOrder')).includes('7,697'));
+  const waHref = await evaluate('document.querySelector(".checkout-btn").getAttribute("href")');
+  assert(waHref && waHref.includes('wa.me/923130468211'), 'WhatsApp order link must contain 923130468211');
   await evaluate('document.querySelector(".cart-overlay").click()'); await delay(100);
   assert.equal(await evaluate('document.querySelector(".drawer-open") === null'), true);
   await evaluate('document.querySelector(".cart-button").click()'); await delay(100);
@@ -86,6 +96,7 @@ try {
   await evaluate('document.querySelector(".mobile-menu").click()'); await delay(100);
   assert.equal(await evaluate('document.querySelector(".mobile-menu").getAttribute("aria-expanded")'), 'true');
   assert.equal(await evaluate('document.querySelector("#primary-navigation a:last-child").getAttribute("href")'), '/oranges');
+  assert(!await evaluate('document.querySelector("#primary-navigation").textContent.includes("Home")'), 'Navigation must not contain Home link');
   await send('Input.dispatchKeyEvent', { type: 'keyDown', key: 'Escape', code: 'Escape', windowsVirtualKeyCode: 27 }); await delay(100);
   assert.equal(await evaluate('document.querySelector(".mobile-menu").getAttribute("aria-expanded")'), 'false');
   for (const [width, height] of [[375,667],[390,844],[430,932],[768,1024]]) {
@@ -112,7 +123,7 @@ try {
   assert(await evaluate('[...document.querySelectorAll(".chapter")].every(e=>getComputedStyle(e).transform==="none")'));
   assert.equal(await evaluate('getComputedStyle(document.querySelector(".narrative-sticky")).position'), 'relative');
   await send('Emulation.setEmulatedMedia', { features: [] });
-  report.checks.push('Add both products; increment; totals 4,998 and 7,397; persistence; Escape/overlay/close; decrement to empty; enquiry text with mocked clipboard; menu; four scroll-driven chapters forward and reverse at 375×667, 390×844, 430×932, 768×1024 and desktop; reduced motion');
+  report.checks.push('Add both products; increment; totals 5,198 and 7,697; persistence; Escape/overlay/close; decrement to empty; enquiry text with mocked clipboard; menu; four scroll-driven chapters forward and reverse at 375×667, 390×844, 430×932, 768×1024 and desktop; reduced motion');
   // Cold local load samples, with a fixed viewport and no scrolling or resizing during measurement.
   for (const [width, route] of [[390,'/'],[1440,'/'],[390,'/oranges'],[1440,'/oranges']]) {
     await viewport(width); await send('Network.clearBrowserCache'); await navigate(route); await delay(2500);

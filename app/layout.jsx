@@ -1,5 +1,6 @@
 import './globals.css';
 import { siteUrl, indexable } from '@/lib/seo.mjs';
+import PremiumLoader from '@/components/PremiumLoader';
 
 export const metadata = {
   metadataBase: siteUrl ? new URL(siteUrl) : undefined,
@@ -12,5 +13,6 @@ export const metadata = {
 export const viewport = { width: 'device-width', initialScale: 1, themeColor: '#07140e' };
 
 export default function RootLayout({ children }) {
-  return <html lang="en-PK"><head><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous"/></head><body>{children}</body></html>;
+  const loaderBootstrap = `try{document.documentElement.dataset.loader=sessionStorage.getItem('mrkinoow-premium-loader')?'seen':'show'}catch(e){document.documentElement.dataset.loader='show'}`;
+  return <html lang="en-PK" suppressHydrationWarning><head><script dangerouslySetInnerHTML={{__html:loaderBootstrap}}/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous"/></head><body><PremiumLoader/>{children}</body></html>;
 }

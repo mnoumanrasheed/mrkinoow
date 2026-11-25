@@ -67,6 +67,6 @@
  <path d="M95 195 L353 249 628 185 628 207 353 273 95 216Z" fill="url(#rim)"/>
  <path d="M353 249 L353 458" stroke="#8b8e67" stroke-opacity=".4" stroke-width="2"/>
  <text x="210" y="339" fill="#f2dfae" font-family="Georgia,serif" font-size="38" text-anchor="middle" transform="rotate(16 210 339)">Mr. Kinoow</text>
- <text x="212" y="367" fill="#d7be8b" font-family="Arial,sans-serif" font-size="13" letter-spacing="4" text-anchor="middle" transform="rotate(16 212 367)">PREMIUM KINNOW</text>
+ <text x="212" y="367" fill="#d7be8b" font-family="Arial,sans-serif" font-size="13" letter-spacing="4" text-anchor="middle" transform="rotate(16 212 367)">ORCHARD KINNOW</text>
  <path d="M415 297 Q474 280 530 287" stroke="#cda66e" stroke-width="1.7" fill="none" opacity=".5"/>
  </svg>
