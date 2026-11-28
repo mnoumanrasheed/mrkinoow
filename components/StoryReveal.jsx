@@ -6,35 +6,29 @@ import { useEffect, useRef } from 'react';
  * Applies a gentle fade-up + translate animation when the element enters the viewport.
  * Respects prefers-reduced-motion by rendering without animation.
  */
-export default function StoryReveal({ children, tag: Tag = 'div', className = '', delay = 0, ...rest }) {
+export default function StoryReveal({ children, tag: Tag = 'div', className = '', delay = 0, variant = 'rise', ...rest }) {
   const ref = useRef(null);
 
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      el.style.opacity = '1';
-      el.style.transform = 'none';
-      return;
-    }
-    el.style.opacity = '0';
-    el.style.transform = 'translateY(32px)';
-    el.style.transition = `opacity 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) ${delay}ms, transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) ${delay}ms`;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    el.dataset.revealReady = 'true';
+    el.style.setProperty('--story-delay', `${delay}ms`);
 
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          el.style.opacity = '1';
-          el.style.transform = 'translateY(0)';
+          el.dataset.revealed = 'true';
           observer.unobserve(el);
         }
       },
-      { threshold: 0.15, rootMargin: '0px 0px -40px 0px' }
+      { threshold: 0.12, rootMargin: '0px 0px -8% 0px' }
     );
     observer.observe(el);
     return () => observer.disconnect();
   }, [delay]);
 
-  return <Tag ref={ref} className={className} {...rest}>{children}</Tag>;
+  return <Tag ref={ref} className={className} data-story-reveal={variant} {...rest}>{children}</Tag>;
 }
 

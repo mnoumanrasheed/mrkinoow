@@ -1,170 +1,158 @@
 import Link from 'next/link';
 import { Header, Footer } from '@/components/BrandShell';
 import Icon from '@/components/Icons';
+import StoryJournalMotion from '@/components/StoryJournalMotion';
+import StoryReveal from '@/components/StoryReveal';
 import { portraitAttributes } from '@/lib/portraitAssets';
 import { pageMetadata } from '@/lib/seo.mjs';
 import { siteConfig } from '@/lib/siteConfig';
 import styles from './StoryPage.module.css';
 
 export const metadata = pageMetadata({
-  title: 'Our Story — Freshness & Thoughtful Presentation',
-  description: 'Discover the idea behind Mr. Kinoow: a citrus brand shaped by freshness, thoughtful presentation and the joy of sharing. Meet the people behind the vision.',
+  title: 'Our Story — The Orchard Journal',
+  description: 'Discover the story of Mr. Kinoow, from our own farm in Punjab to thoughtfully packed Royal and Golden Kinnow Collections delivered across Pakistan.',
   path: '/our-story',
 });
 
 const commitments = [
-  { number: '01', icon: 'leaf', title: 'From our own farm', label: 'Known origin', text: 'Both the Royal and Golden Kinnow Collections are grown and selected at our own farm.' },
-  { number: '02', icon: 'box', title: '10 KG net fruit weight', label: 'Packaging excluded', text: 'Every collection box contains 10 KG net fruit weight. The box and other packaging are excluded.' },
-  { number: '03', icon: 'star', title: 'Your order, prepared', label: 'Shared on WhatsApp', text: 'A harvesting and packing video is shared with every order via WhatsApp.' },
-  { number: '04', icon: 'sun', title: 'Complimentary delivery', label: 'Across Pakistan', text: 'Delivery is free across Pakistan via Leopards Courier.' },
+  { number: '01', title: 'From Our Own Farm', text: 'Grown and selected at our own farm.' },
+  { number: '02', title: 'Net Fruit Weight', text: 'Every box contains 10 KG of fruit, excluding packaging.' },
+  { number: '03', title: 'See Your Order Prepared', text: 'A harvesting and packing video is shared with every order through WhatsApp.' },
+  { number: '04', title: 'Delivery On Us', text: 'Complimentary delivery across Pakistan via Leopards Courier.' },
 ];
 
-const harvestNotes = [
-  { number: '01', title: 'No artificial polish', text: 'Our kinnows are presented without artificial polishing.' },
-  { number: '02', title: 'No added preservatives', text: 'No preservatives are added to either collection.' },
-  { number: '03', title: 'WhatsApp transparency', text: 'A harvesting and packing video is shared with every order.' },
-];
+const fruitStatements = ['NO ARTIFICIAL POLISHING', 'NO ADDED PRESERVATIVES', 'THOUGHTFULLY PACKED'];
 
 const journey = [
-  { number: '01', title: 'Choose your collection', text: 'Select Royal for larger kinnows or Golden for comparatively smaller kinnows from the same farm.' },
-  { number: '02', title: 'Selected and packed', text: 'Your 10 KG net fruit box is prepared without artificial polishing or added preservatives.' },
-  { number: '03', title: 'Prepared and delivered', text: 'A harvesting and packing video is shared via WhatsApp, with free delivery across Pakistan through Leopards Courier.' },
+  { number: '01', title: 'Choose', text: 'Choose Royal for larger kinnows or Golden for comparatively smaller kinnows.' },
+  { number: '02', title: 'Prepare', text: 'Each box is packed with 10 KG net fruit weight, excluding packaging.' },
+  { number: '03', title: 'Deliver', text: 'A harvesting and packing video is shared through WhatsApp, with complimentary delivery via Leopards Courier.' },
 ];
 
 export default function StoryPage() {
   const phone = (siteConfig.whatsapp || '').replace(/\D/g, '');
 
-  return (
-    <>
-      <Header story />
-      <main className={styles.page}>
-        <section className={styles.hero}>
-          <img className={styles.heroImage} src="/images/hero-fruit.webp" alt="Fresh citrus on a Mr. Kinoow orchard branch" width="1672" height="941" fetchPriority="high" />
-          <div className={styles.heroShade} />
-          <div className={`shell ${styles.heroInner}`}>
-            <div className={styles.heroCopy}>
-              <p className={styles.eyebrow}>OUR STORY · PUNJAB, PAKISTAN</p>
-              <h1>Rooted in nature.<br /><em>Made to be shared.</em></h1>
-              <p className={styles.heroIntro}>Mr. Kinoow brings together two carefully selected kinnow collections from our own farm, packed with care and delivered to doorsteps across Pakistan.</p>
-              <div className={styles.heroActions}>
-                <a className={styles.heroScroll} href="#origin"><span>Explore our approach</span><Icon name="arrowDown" size={16} /></a>
-                <span>Our own farm · Thoughtfully packed</span>
-              </div>
+  return <>
+    <Header story />
+    <StoryJournalMotion className={styles.page}>
+      <section className={styles.hero} aria-labelledby="story-title">
+        <div className={styles.heroMedia} data-story-parallax>
+          <img src="/images/hero-fruit.webp" alt="Kinnows and green leaves in warm cinematic light" width="1672" height="941" fetchPriority="high" />
+        </div>
+        <div className={styles.heroShade}/>
+        <div className={`shell ${styles.heroLayout}`}>
+          <div className={styles.heroNumber} aria-hidden="true"><span>THE ORCHARD JOURNAL</span><strong>00</strong></div>
+          <StoryReveal className={styles.heroCopy}>
+            <p className={styles.eyebrow}>THE STORY OF MR. KINOOW</p>
+            <h1 id="story-title"><span>Every fruit</span><em>has a beginning.</em></h1>
+            <p className={styles.heroIntro}>Ours begins at our own farm, with a simple belief: good fruit deserves thoughtful care.</p>
+          </StoryReveal>
+          <a className={styles.scrollCue} href="#roots"><span>Read the journal</span><i aria-hidden="true"/><Icon name="arrowDown" size={15}/></a>
+        </div>
+      </section>
+
+      <section className={styles.roots} id="roots" aria-labelledby="roots-title">
+        <div className={styles.rootsImage} data-story-parallax>
+          <img src="/images/orchard-sunset-premium.png" alt="Cinematic orchard landscape representing the setting of the Mr. Kinoow story" width="2037" height="772" loading="lazy" decoding="async" />
+          <span>Punjab, Pakistan</span>
+        </div>
+        <div className={`shell ${styles.rootsLayout}`}>
+          <StoryReveal className={styles.rootsHeading}>
+            <p className={styles.eyebrow}>01 / OUR ROOTS</p>
+            <h2 id="roots-title">It begins with<br/><em>the orchard.</em></h2>
+          </StoryReveal>
+          <StoryReveal className={styles.rootsCopy} delay={120}>
+            <span className={styles.dropCap}>M</span>
+            <p>Mr. Kinoow brings kinnows from our own farm in Punjab to homes across Pakistan. We focus on careful selection, thoughtful packing, and a clear connection to where our fruit comes from.</p>
+            <small>OUR OWN FARM · PUNJAB</small>
+          </StoryReveal>
+        </div>
+      </section>
+
+      <section className={styles.fruit} aria-labelledby="fruit-title">
+        <div className={`shell ${styles.fruitIntro}`}>
+          <StoryReveal>
+            <p className={styles.eyebrow}>02 / THE FRUIT</p>
+            <h2 id="fruit-title">Naturally, just as<br/><em>it should be.</em></h2>
+          </StoryReveal>
+          <StoryReveal tag="p" delay={120}>Our kinnows are presented without artificial polishing or added preservatives. We believe the fruit should remain the focus.</StoryReveal>
+        </div>
+        <div className={`shell ${styles.fruitExperience}`}>
+          <figure className={styles.fruitVisual} data-story-parallax>
+            <img src="/images/peel-reveal-premium.png" alt="Close-up composition of peeled citrus and leaves" width="2106" height="747" loading="lazy" decoding="async" />
+            <figcaption>THE FRUIT, CLOSE UP</figcaption>
+          </figure>
+          <div className={styles.fruitStatements}>
+            {fruitStatements.map((statement, index)=><StoryReveal className={styles.fruitStatement} key={statement} delay={index * 70}>
+              <span>0{index + 1}</span><p>{statement}</p>
+            </StoryReveal>)}
+          </div>
+        </div>
+      </section>
+
+      <section className={styles.promise} aria-labelledby="promise-title">
+        <div className={`shell ${styles.promiseHeading}`}>
+          <StoryReveal><p className={styles.eyebrow}>03 / WHAT MATTERS TO US</p><h2 id="promise-title">Considered in<br/><em>every detail.</em></h2></StoryReveal>
+          <p className={styles.promiseNote}>Four clear commitments guide the experience from our farm to your doorstep.</p>
+        </div>
+        <ol className={`shell ${styles.promiseIndex}`}>
+          {commitments.map((item,index)=><StoryReveal tag="li" className={styles.promiseItem} delay={index * 55} key={item.number}>
+            <span>{item.number}</span><h3>{item.title}</h3><p>{item.text}</p>
+          </StoryReveal>)}
+        </ol>
+      </section>
+
+      <section className={styles.founders} aria-labelledby="founders-title">
+        <div className={`shell ${styles.foundersHeading}`}>
+          <StoryReveal>
+            <p className={styles.eyebrow}>04 / THE FOUNDERS</p>
+            <h2 id="founders-title">Two minds.<br/><em>One shared vision.</em></h2>
+          </StoryReveal>
+          <StoryReveal tag="p" delay={120}>Behind Mr. Kinoow are two people working to bring a more thoughtful fruit-shopping experience to homes across Pakistan.</StoryReveal>
+        </div>
+        <div className={`shell ${styles.portraitStage}`}>
+          {siteConfig.founders.map((founder,index)=><StoryReveal tag="article" variant={index ? 'left' : 'right'} className={`${styles.founder} ${index ? styles.founderSecond : styles.founderFirst}`} key={founder.name}>
+            <div className={styles.portrait}>
+              <span aria-hidden="true">0{index + 1}</span>
+              <img src={founder.image} alt={`Portrait of ${founder.name}, ${founder.role} at Mr. Kinoow`} loading="lazy" decoding="async" {...portraitAttributes(founder.image, '(max-width: 760px) 92vw, 40vw')} />
             </div>
-            <div className={styles.heroCaption}><span>01</span><p>Two fruit-size selections. One considered farm-to-doorstep experience.</p></div>
-          </div>
-        </section>
+            <div className={styles.founderCopy}><p>{founder.role}</p><h3>{founder.name}</h3><span>{founder.bio}</span></div>
+          </StoryReveal>)}
+        </div>
+      </section>
 
-        <section className={styles.manifesto} aria-label="Our standards">
-          <div className={`shell ${styles.manifestoGrid}`}>
-            <p className={styles.manifestoLead}>Our approach is simple: select kinnows from our own farm, present them without artificial polishing or added preservatives, and make each order clear.</p>
-            <div className={styles.stats}>
-              <div><strong>OWN</strong><span>Farm grown and selected</span></div>
-              <div><strong>10 KG</strong><span>Net fruit weight</span></div>
-              <div><strong>FREE</strong><span>Nationwide courier</span></div>
+      <section className={styles.experience} aria-labelledby="experience-title">
+        <div className={`shell ${styles.experienceLayout}`}>
+          <StoryReveal className={styles.experienceHeading}>
+            <p className={styles.eyebrow}>05 / THE EXPERIENCE</p>
+            <h2 id="experience-title">A simple journey,<br/><em>thoughtfully handled.</em></h2>
+          </StoryReveal>
+          <ol className={styles.timeline} data-story-timeline>
+            {journey.map((step,index)=><StoryReveal tag="li" delay={index * 70} key={step.number}>
+              <span>{step.number}</span><div><h3>{step.title}</h3><p>{step.text}</p></div>
+            </StoryReveal>)}
+          </ol>
+        </div>
+      </section>
+
+      <section className={styles.finalFrame} aria-labelledby="final-title">
+        <img src="/images/citrus-splash.webp" alt="Citrus in warm dramatic light" width="1600" height="900" loading="lazy" decoding="async" data-story-parallax />
+        <div className={styles.finalShade}/>
+        <div className={`shell ${styles.finalLayout}`}>
+          <StoryReveal className={styles.finalCopy}>
+            <p className={styles.eyebrow}>THE MR. KINOOW COLLECTION</p>
+            <h2 id="final-title">From our farm.<br/><em>To your home.</em></h2>
+          </StoryReveal>
+          <StoryReveal className={styles.finalAction} delay={120}>
+            <p>Discover our Royal and Golden Kinnow Collections, thoughtfully selected and delivered across Pakistan.</p>
+            <div className={styles.finalButtons}>
+              <Link className={styles.primaryCta} href="/#collection">Explore the Collection</Link>
+              {phone&&<a className={styles.secondaryCta} href={`https://wa.me/${phone}`} target="_blank" rel="noopener noreferrer"><Icon name="whatsapp" size={17}/>Order on WhatsApp</a>}
             </div>
-          </div>
-        </section>
-
-        <section className={styles.origin} id="origin">
-          <div className={`shell ${styles.originGrid}`}>
-            <div className={styles.originMedia}>
-              <div className={styles.imageFrame}><img src="/images/orchard-sunset-premium.png" alt="Golden evening sunset over a citrus orchard in Punjab" width="2037" height="772" loading="lazy" decoding="async" /></div>
-              <div className={styles.imageMeta}><span>Origin orchard</span><span>Punjab citrus belt</span></div>
-            </div>
-            <div className={styles.originCopy}>
-              <p className={styles.sectionLabel}>01 — Our origin</p>
-              <h2>From our own farm<br /><em>to your doorstep.</em></h2>
-              <div className={styles.rule} />
-              <p>Mr. Kinoow offers two kinnow collections from the same farm. Royal contains larger kinnows; Golden contains comparatively smaller kinnows. The distinction is fruit size, not a claim of different sweetness, flavour, nutrition or quality.</p>
-              <p>Both are selected and packed with the same care. Each box contains 10 KG net fruit weight, excluding the box and other packaging.</p>
-              <ul className={styles.originList}>
-                <li><Icon name="leaf" size={17} /> From our own farm</li>
-                <li><Icon name="sun" size={17} /> No artificial polishing</li>
-                <li><Icon name="star" size={17} /> No added preservatives</li>
-              </ul>
-            </div>
-          </div>
-        </section>
-
-        <section className={styles.purity}>
-          <div className={`shell ${styles.purityHeading}`}>
-            <p className={styles.sectionLabel}>02 — Thoughtful presentation</p>
-            <h2>Nothing artificial.<br /><em>Only what belongs.</em></h2>
-            <p>Neither collection uses artificial polishing or added preservatives. This clear, restrained approach keeps the presentation focused on the fruit and the care taken in preparing each order.</p>
-          </div>
-          <div className={`shell ${styles.purityVisual}`}>
-            <img src="/images/peel-reveal-premium.png" alt="Freshly peeled citrus with natural droplets" width="2106" height="747" loading="lazy" decoding="async" />
-            <span>Prepared with care</span>
-          </div>
-          <div className={`shell ${styles.harvestNotes}`}>
-            {harvestNotes.map((note) => <article key={note.number}><span>{note.number}</span><h3>{note.title}</h3><p>{note.text}</p></article>)}
-          </div>
-        </section>
-
-        <section className={styles.promise} id="promise">
-          <div className={`shell ${styles.promiseIntro}`}>
-            <div><p className={styles.sectionLabel}>03 — Our promise</p><h2>Care you can<br /><em>see and verify.</em></h2></div>
-            <p>Four verified commitments define the Mr. Kinoow collection.</p>
-          </div>
-          <div className={`shell ${styles.commitmentGrid}`}>
-            {commitments.map((item) => (
-              <article className={styles.commitment} key={item.number}>
-                <div className={styles.commitmentTop}><span>{item.number}</span><Icon name={item.icon} size={22} /></div>
-                <p className={styles.commitmentLabel}>{item.label}</p><h3>{item.title}</h3><p>{item.text}</p>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section className={styles.founders} id="founders">
-          <div className={`shell ${styles.foundersHeading}`}>
-            <p className={styles.sectionLabel}>04 — The people</p>
-            <h2>Two minds.<br /><em>One honest vision.</em></h2>
-            <p>Meet the people shaping the idea, presentation and farm-to-doorstep experience of Mr. Kinoow.</p>
-          </div>
-          <div className={`shell ${styles.founderGrid}`}>
-            {siteConfig.founders.map((founder, index) => (
-              <article className={styles.founder} key={founder.name}>
-                <div className={styles.founderPortrait}>
-                  <span className={styles.founderNumber}>0{index + 1}</span>
-                  <img src={founder.image} alt={`Portrait of ${founder.name}, ${founder.role} of Mr. Kinoow`} loading="lazy" decoding="async" {...portraitAttributes(founder.image, '(max-width: 760px) 90vw, 42vw')} />
-                </div>
-                <div className={styles.founderInfo}><p>{founder.role}</p><h3>{founder.name}</h3><span>{founder.bio}</span></div>
-              </article>
-            ))}
-          </div>
-          <blockquote className={`shell ${styles.quote}`}>
-            <p>“For us, thoughtful presentation begins with clear product information and care at every step from our farm to your doorstep.”</p>
-            <footer>Dr Ebbad Nazir &amp; M. Nouman <span>— Founders, Mr. Kinoow</span></footer>
-          </blockquote>
-        </section>
-
-        <section className={styles.process} id="journey">
-          <div className={`shell ${styles.processGrid}`}>
-            <div className={styles.processHeading}><p className={styles.sectionLabel}>05 — Your order</p><h2>Simple choices.<br /><em>Clear details.</em></h2><p>Choose your preferred fruit size, review the verified box details, and prepare your order through WhatsApp.</p></div>
-            <ol className={styles.timeline}>
-              {journey.map((step) => <li key={step.number}><span className={styles.timelineNumber}>{step.number}</span><div><h3>{step.title}</h3><p>{step.text}</p></div></li>)}
-            </ol>
-          </div>
-        </section>
-
-        <section className={styles.cta}>
-          <img src="/images/citrus-splash.webp" alt="" width="1600" height="900" loading="lazy" aria-hidden="true" />
-          <div className={styles.ctaShade} />
-          <div className={`shell ${styles.ctaInner}`}>
-            <div><p className={styles.sectionLabel}>From our farm to your doorstep</p><h2>Bring home the<br /><em>Mr. Kinoow collection.</em></h2></div>
-            <div className={styles.ctaAction}>
-              <p>Grown and selected at our own farm, thoughtfully packed, and delivered free across Pakistan via Leopards Courier.</p>
-              <div className={styles.ctaButtons}>
-                <Link className="btn btn-solid" href="/#collection">Explore the collection <Icon name="arrow" size={18} /></Link>
-                {phone && <a className={styles.textLink} href={`https://wa.me/${phone}`} target="_blank" rel="noopener noreferrer">Order on WhatsApp <Icon name="whatsapp" size={17} /></a>}
-              </div>
-            </div>
-          </div>
-        </section>
-      </main>
-      <Footer />
-    </>
-  );
+          </StoryReveal>
+        </div>
+      </section>
+    </StoryJournalMotion>
+    <Footer />
+  </>;
 }

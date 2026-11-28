@@ -9,7 +9,8 @@ export async function generateMetadata({ params }) {
   const { citrus } = await params;
   const content = citrusPages[citrus];
   if (!content) notFound();
-  return pageMetadata({ title: content.title, description: content.description, path: `/${citrus}` });
+  const metadata = pageMetadata({ title: content.title, description: content.description, path: `/${citrus}` });
+  return content.legacy ? { ...metadata, robots: { index: false, follow: true } } : metadata;
 }
 export default async function Page({ params }) {
   const { citrus } = await params;

@@ -15,10 +15,10 @@ export function CitrusShell({ children }) {
 
 export default function CitrusPage({ slug, content }) {
   const products = siteConfig.products.filter(product => content.productIds.includes(product.id));
-  const items = slug === 'oranges' ? [['Home', '/'], ['Collection', '/oranges']] : [['Home', '/'], ['Collection', '/oranges'], ['Kinnow', `/${slug}`]];
+  const items = slug === 'oranges' ? [['Home', '/'], ['Collection', '/oranges']] : [['Home', '/'], ['Collection', '/oranges'], [slug === 'malta' ? 'Collection update' : 'Kinnow', `/${slug}`]];
   return <CitrusShell>
     <Breadcrumbs items={items}/>
-    <header className={styles.intro}><span className="eyebrow">MR. KINOOW / CITRUS NOTES</span><h1>{content.heading}</h1><p>{content.intro}</p></header>
+    <header className={styles.intro}><span className="eyebrow">MR. KINOOW / {content.legacy ? 'COLLECTION UPDATE' : 'CITRUS NOTES'}</span><h1>{content.heading}</h1><p>{content.intro}</p></header>
     <div className={styles.editorial}>
       <div className={styles.sections}>{content.sections.map(section => <section key={section.heading}><h2>{section.heading}</h2><p>{section.text}</p></section>)}</div>
       <aside className={styles.aside} aria-label="Citrus collection"><h2>Explore the boxes</h2>{products.map(product => <article key={product.id} className={styles.card}>
